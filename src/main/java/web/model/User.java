@@ -1,12 +1,17 @@
 package web.model;
 
-import jakarta.persistence.*;
+
+import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
+
 @Entity
-@Table
+@Table(name = "users")
+@Component
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -18,6 +23,7 @@ public class User {
 
     @Column
     private int salary;
+
 
     public User(String name, String lastName, int salary) {
         this.name = name;

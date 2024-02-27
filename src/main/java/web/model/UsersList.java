@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UsersList {
     public static List<User> users;
-
+    private static int USERS_COUNT;
     public static List<User> createUsers() {
         User user1 = new User("Alexander","Korotkov", 124000);
         User user2 = new User("Vladimir","Krivenkov", 220000);

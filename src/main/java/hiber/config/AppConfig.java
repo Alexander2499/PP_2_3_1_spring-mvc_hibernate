@@ -16,14 +16,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-@Configuration
-@PropertySource("classpath:db.properties")
-@EnableTransactionManagement
-@ComponentScan(value = "hiber")
-@PropertySource("classpath:db.properties")
+//@Configuration
+//@PropertySource("classpath:db.properties")
+//@EnableTransactionManagement
+//@ComponentScan(value = "hiber")
+//@PropertySource("classpath:db.properties")
 public class AppConfig {
 
-    @Autowired
+  //  @Autowired
     private Environment env;
     private Properties hibernateProperties;
 
@@ -39,7 +39,7 @@ public class AppConfig {
     }
 
 
-    @Bean
+  //  @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean () throws IOException {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
@@ -56,7 +56,7 @@ public class AppConfig {
 //    }
 
 
-    @Bean
+  //  @Bean
     public DataSource dataSource() {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl(env.getRequiredProperty("db.url"));
