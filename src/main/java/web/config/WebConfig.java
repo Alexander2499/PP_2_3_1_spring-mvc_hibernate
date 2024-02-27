@@ -16,7 +16,7 @@ import javax.servlet.ServletResponse;
 @Configuration
 @EnableWebMvc
 @ComponentScan("web")
-public class WebConfig implements WebMvcConfigurer  {
+public class WebConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
 
