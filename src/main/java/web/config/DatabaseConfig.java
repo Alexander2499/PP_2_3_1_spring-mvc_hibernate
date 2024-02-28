@@ -52,48 +52,42 @@ public class DatabaseConfig {
     }
 
 
+    public List<User> showUsers() {
+
+        String sql = "SELECT * FROM USERS";
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+
+        EntityManager em = emf.createEntityManager();
+
+        Query query = em.createNativeQuery(sql, User.class);
+
+        List<User> list = query.getResultList();
+
+        em.close();
+        emf.close();
+
+        return list;
+    }
+
 //    @Transactional
 //    public List<User> showUsers() {
-//
-//        String sql = "SELECT * FROM USERS";
-//
 //        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-//
 //        EntityManager em = emf.createEntityManager();
+//        try {
+//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+//            Root<User> root = criteriaQuery.from(User.class);
+//            criteriaQuery.select(root);
 //
-//        EntityTransaction transaction = em.getTransaction();
-//        transaction.begin();
-//
-//        Query query = em.createNativeQuery(sql);
-//
-//        List<User> list = query.getResultList();
-//
-//        transaction.commit();
-//
-//        em.close();
-//        emf.close();
-//
-//        return list;
+//            TypedQuery<User> query = em.createQuery(criteriaQuery);
+//            return query.getResultList();
+//        } catch (Exception e) {
+//            // Handle exceptions (e.g., logging, rollback, etc.)
+//            e.printStackTrace();
+//            return Collections.emptyList();
+//        }
 //    }
-
-    @Transactional
-    public List<User> showUsers() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-        EntityManager em = emf.createEntityManager();
-        try {
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-            Root<User> root = criteriaQuery.from(User.class);
-            criteriaQuery.select(root);
-
-            TypedQuery<User> query = em.createQuery(criteriaQuery);
-            return query.getResultList();
-        } catch (Exception e) {
-            // Handle exceptions (e.g., logging, rollback, etc.)
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-    }
 
 
 

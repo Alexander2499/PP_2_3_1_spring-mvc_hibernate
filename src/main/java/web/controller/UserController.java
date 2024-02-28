@@ -24,8 +24,6 @@ public class UserController {
 //    private EntityManagerFactory entityManagerFactory;
 //    EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-    List<User> usersList = userService.showUsers();
-
     @Autowired
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
@@ -33,6 +31,7 @@ public class UserController {
 
     @GetMapping(value = "/users")
     public String showAllUsersOnWeb(Model model) {
+        List<User> usersList = userService.showUsers();
         model.addAttribute("users", usersList);
         return "users";
     }
@@ -73,7 +72,7 @@ public class UserController {
     @PostMapping("/users")
     public String createUser(@ModelAttribute("user") User user) {
         userService.save(user);
-        return "redirect:/new_user";
+        return "redirect:/users";
     }
 
 }
