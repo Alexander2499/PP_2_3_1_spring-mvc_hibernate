@@ -1,32 +1,19 @@
 package web.config;
 
-
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.stereotype.Component;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import web.dao.UserDaoImpl;
-import web.model.User;
 
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 
-@Component
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:db.properties")
@@ -35,108 +22,14 @@ public class DatabaseConfig {
     @Autowired
     private Environment env;
 
-    @Transactional
-    public void saveUser(User user) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-        EntityManager em = emf.createEntityManager();
-
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-
-// Save the object to the database
-        em.persist(user);
-
-        transaction.commit();
-
-        em.close();
-        emf.close();
-    }
-
-    public User refactorUser(int id) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-        EntityManager em = emf.createEntityManager();
-        User user = em.find(User.class , id);
-        return em.merge(user);
-        //User userForRefactor = em.merge();
-    }
-
-
-
-//    public List<User> showUsers() {
-//
-//        String sql = "SELECT * FROM USERS";
-//
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-//
-//        EntityManager em = emf.createEntityManager();
-//
-//
-//        Query query = em.createNativeQuery(sql, User.class);
-//
-//        List<User> list = query.getResultList();
-//
-//        em.close();
-//        emf.close();
-//
-//        return list;
-//    }
-
-    @Transactional
-    public List<User> showUsers() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-        EntityManager em = emf.createEntityManager();
-        try {
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-            Root<User> root = criteriaQuery.from(User.class);
-            criteriaQuery.select(root);
-
-            TypedQuery<User> query = em.createQuery(criteriaQuery);
-            return query.getResultList();
-        } catch (Exception e) {
-            // Handle exceptions (e.g., logging, rollback, etc.)
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-    }
-
-
-
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource());
-        em.setPackagesToScan("web");
-        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        em.setJpaProperties(getHibernateProperties());
-        return em;
+    public LocalSessionFactoryBean sessionFactory() {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setPackagesToScan(new String[]{"com.example.entity"}); // Replace with your entity package
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
     }
-
-
-//    public Properties getHibernateProperties () {
-//        try {
-//            Properties properties = new Properties();
-//            InputStream is = getClass().getClassLoader().getResourceAsStream("hibernate.properties");
-//            properties.load(is);
-//            System.out.println(properties);
-//            return properties;
-//        } catch (IOException e) {
-//            throw new IllegalArgumentException("NE RABOTAET");
-//        }
-//    }
-
-    public Properties getHibernateProperties() {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("hibernate.properties")) {
-            Properties properties = new Properties();
-            properties.load(is);
-            System.out.println(properties);
-            is.close();
-            return properties;
-        } catch (IOException e) {
-            throw new IllegalArgumentException("DOESN'T WORK");
-        }
-    }
-
 
     @Bean
     public DataSource dataSource() {
@@ -146,5 +39,20 @@ public class DatabaseConfig {
         ds.setUsername(env.getRequiredProperty("db.username"));
         ds.setPassword(env.getRequiredProperty("db.password"));
         return ds;
+    }
+
+    @Bean
+    public PlatformTransactionManager hibernateTransactionManager() {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(sessionFactory().getObject());
+        return transactionManager;
+    }
+
+    private Properties hibernateProperties() {
+        Properties hibernateProperties = new Properties();
+        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
+        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
+        // Add any other Hibernate properties you need
+        return hibernateProperties;
     }
 }

@@ -1,42 +1,78 @@
 package web.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import web.config.DatabaseConfig;
 import web.model.User;
 import web.model.UsersList;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
+@Component
 public class UserDaoImpl implements UserDao {
 
-
-    private DatabaseConfig databaseConfig = new DatabaseConfig();
-
-//    public UserDaoImpl(DatabaseConfig databaseConfig) {
-//        this.databaseConfig = databaseConfig;
-//    }
+    private final EntityManager em;
 
     public UserDaoImpl() {
-
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        em = emf.createEntityManager();
     }
 
     @Override
     public List<User> showUsers() {
-        return databaseConfig.showUsers();
+        try {
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
+            criteriaQuery.select(root);
+
+            TypedQuery<User> query = em.createQuery(criteriaQuery);
+            return query.getResultList();
+        } catch (Exception e) {
+            // Handle exceptions (e.g., logging, rollback, etc.)
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 
     @Override
     public void addUser(User user) {
-        databaseConfig.saveUser(user);
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
 
+// Save the object to the database
+        em.persist(user);
+
+        transaction.commit();
        // databaseConfig.entityManagerFactory().createNativeEntityManager().persist(user);
     }
 
     @Override
-    public User refactorUser(int id) {
-        return databaseConfig.refactorUser(id);
+    public User findUserById(int id) {
+        User user = em.find(User.class , id);
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public void update(int id, User updatedUser) {
+        User userToBeUpdated = findUserById(id);
+        userToBeUpdated.setName(updatedUser.getName());
+        userToBeUpdated.setLastName(updatedUser.getLastName());
+        userToBeUpdated.setSalary(updatedUser.getSalary());
+
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+// Save the object to the database
+        em.persist(userToBeUpdated);
+
+        transaction.commit();
     }
 }
