@@ -9,4 +9,6 @@ public interface UserDao {
     List<User> showUsers();
 
     public void addUser(User user);
+
+    public User refactorUser(int id);
 }

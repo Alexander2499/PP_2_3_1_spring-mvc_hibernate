@@ -4,9 +4,7 @@ import org.springframework.stereotype.Component;
 import web.dao.UserDao;
 import web.dao.UserDaoImpl;
 import web.model.User;
-import web.model.UsersList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,5 +20,10 @@ public class UserServiceImpl implements UserService {
 
     public void save(User user) {
         userDao.addUser(user);
+    }
+
+    @Override
+    public User refactorUser(int id) {
+        return userDao.refactorUser(id);
     }
 }

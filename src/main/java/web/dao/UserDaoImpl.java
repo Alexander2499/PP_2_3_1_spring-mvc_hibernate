@@ -32,6 +32,11 @@ public class UserDaoImpl implements UserDao {
     public void addUser(User user) {
         databaseConfig.saveUser(user);
 
-//        databaseConfig.entityManagerFactory().createNativeEntityManager().persist(user);
+       // databaseConfig.entityManagerFactory().createNativeEntityManager().persist(user);
+    }
+
+    @Override
+    public User refactorUser(int id) {
+        return databaseConfig.refactorUser(id);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import web.dao.UserDaoImpl;
 import web.model.User;
 
 import javax.persistence.*;
@@ -51,43 +52,53 @@ public class DatabaseConfig {
         emf.close();
     }
 
-
-    public List<User> showUsers() {
-
-        String sql = "SELECT * FROM USERS";
-
+    public User refactorUser(int id) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-
         EntityManager em = emf.createEntityManager();
-
-        Query query = em.createNativeQuery(sql, User.class);
-
-        List<User> list = query.getResultList();
-
-        em.close();
-        emf.close();
-
-        return list;
+        User user = em.find(User.class , id);
+        return em.merge(user);
+        //User userForRefactor = em.merge();
     }
 
-//    @Transactional
+
+
 //    public List<User> showUsers() {
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-//        EntityManager em = emf.createEntityManager();
-//        try {
-//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-//            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-//            Root<User> root = criteriaQuery.from(User.class);
-//            criteriaQuery.select(root);
 //
-//            TypedQuery<User> query = em.createQuery(criteriaQuery);
-//            return query.getResultList();
-//        } catch (Exception e) {
-//            // Handle exceptions (e.g., logging, rollback, etc.)
-//            e.printStackTrace();
-//            return Collections.emptyList();
-//        }
+//        String sql = "SELECT * FROM USERS";
+//
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+//
+//        EntityManager em = emf.createEntityManager();
+//
+//
+//        Query query = em.createNativeQuery(sql, User.class);
+//
+//        List<User> list = query.getResultList();
+//
+//        em.close();
+//        emf.close();
+//
+//        return list;
 //    }
+
+    @Transactional
+    public List<User> showUsers() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        EntityManager em = emf.createEntityManager();
+        try {
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
+            criteriaQuery.select(root);
+
+            TypedQuery<User> query = em.createQuery(criteriaQuery);
+            return query.getResultList();
+        } catch (Exception e) {
+            // Handle exceptions (e.g., logging, rollback, etc.)
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
 
 
 

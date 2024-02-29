@@ -1,5 +1,6 @@
 package web.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -9,6 +10,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 public class AppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return new Filter[]{characterEncodingFilter};
+    }
 
     // Метод, указывающий на класс конфигурации
     @Override
@@ -43,10 +53,7 @@ public class AppInit extends AbstractAnnotationConfigDispatcherServletInitialize
 //        encodingFilter.addMappingForUrlPatterns(null, true, "/*");
 //    }
 
-    protected Filter[] getServletFilters() {
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-        characterEncodingFilter.setEncoding("UTF-8");
-        characterEncodingFilter.setForceEncoding(true);
-        return new Filter[]{characterEncodingFilter};
-    }
+
+
+
 }

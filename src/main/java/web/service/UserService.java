@@ -8,4 +8,6 @@ public interface UserService {
     List<User> showUsers();
 
     public void save(User user);
+
+    public User refactorUser(int id);
 }
