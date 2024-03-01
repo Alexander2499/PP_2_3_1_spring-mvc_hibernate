@@ -4,34 +4,94 @@
 <head>
   <meta charset="utf8" />
   <title>Users</title>
+  <style>
+    table {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    thead, tbody {
+      flex: 1;
+    }
+    tbody {
+      display: flex;
+      flex-direction: column;
+    }
+    tr {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    td, th {
+      flex: 1;
+      text-align: center;
+      padding: 5px;
+    }
+    form {
+      margin-left: 5px;
+    }
+  </style>
 </head>
 <body>
 <h3> Пользователи </h3>
 <hr>
-<table border= ="1">
-  <thead>
-  <tr>
-    <th>Id</th>
-    <th>Name</th>
-    <th>Last Name</th>
-    <th>Salary</th>
-  </tr>
-  </thead>
+<table border="1">
   <tbody>
   <tr th:each="u : ${users}">
     <td th:text="${u.id}"/>
     <td th:text="${u.name}"/>
     <td th:text="${u.lastName}"/>
     <td th:text="${u.salary}"/>
-
-  <form th:method="POST" th:action="@{/users/{id}(id=${u.getId()})}">
-    <input type="submit" value="Delete"/>
-  </form>
+    <td>
+      <form th:method="POST" th:action="@{/users/{id}(id=${u.getId()})}">
+        <input type="submit" value="Delete"/>
+      </form>
+    </td>
   </tr>
   </tbody>
-
-
 </table>
-
 </body>
 </html>
+<!--<head>-->
+<!--  <meta charset="utf8" />-->
+<!--  <title>Users</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h3> Пользователи </h3>-->
+<!--<hr>-->
+<!--<table border= ="1">-->
+<!--  <thead>-->
+<!--  <tr>-->
+<!--    <th>Id</th>-->
+<!--    <th>Name</th>-->
+<!--    <th>Last Name</th>-->
+<!--    <th>Salary</th>-->
+<!--  </tr>-->
+<!--  </thead>-->
+<!--  <tbody>-->
+<!--  <tr th:each="u : ${users}">-->
+<!--    <td th:text="${u.id}"/>-->
+<!--    <td th:text="${u.name}"/>-->
+<!--    <td th:text="${u.lastName}"/>-->
+<!--    <td th:text="${u.salary}"/>-->
+
+
+<!--    <style>-->
+<!--      #Delete {-->
+<!--        position: fixed;-->
+<!--        top: 1000px;-->
+<!--        right: 155px;-->
+<!--      }-->
+<!--    </style>-->
+
+<!--  <form th:method="POST" th:action="@{/users/{id}(id=${u.getId()})}">-->
+<!--    <input type="submit" value="Delete"/>-->
+<!--  </form>-->
+<!--  </tr>-->
+<!--  </tbody>-->
+
+
+<!--</table>-->
+
+<!--</body>-->
+<!--</html>-->
