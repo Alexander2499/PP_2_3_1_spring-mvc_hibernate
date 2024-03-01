@@ -23,6 +23,10 @@
     <td th:text="${u.name}"/>
     <td th:text="${u.lastName}"/>
     <td th:text="${u.salary}"/>
+
+  <form th:method="POST" th:action="@{/users/{id}(id=${u.getId()})}">
+    <input type="submit" value="Delete"/>
+  </form>
   </tr>
   </tbody>
 

@@ -87,6 +87,17 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @DeleteMapping("/{id}/delete")
+    public String delete(@PathVariable("id") int id) {
+        userService.delete(id);
+        return "redirect:/users";
+    }
+
+
+
+//    @GetMapping("/{id}/delete")
+//    public String
+
 
 //    @RequestMapping(value = "/refactor", params = {"count"})
 //    public String refactorUsers(@RequestParam(value = "count") int count, Model model) {
