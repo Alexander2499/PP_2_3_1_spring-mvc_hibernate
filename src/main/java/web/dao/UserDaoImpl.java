@@ -79,7 +79,9 @@ public class UserDaoImpl implements UserDao {
     public void delete(int id){
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
-        em.remove(findUserById(id));
+        User user = findUserById(id);
+        em.remove(user);
+
         transaction.commit();
     }
 }

@@ -43,7 +43,7 @@
     <td th:text="${u.lastName}"/>
     <td th:text="${u.salary}"/>
     <td>
-      <form th:method="POST" th:action="@{/users/{id}(id=${u.getId()})}">
+      <form th:method="POST" th:action="@{'/users/' + ${u.id} + '/delete'}">
         <input type="submit" value="Delete"/>
       </form>
     </td>
