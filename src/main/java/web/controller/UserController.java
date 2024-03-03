@@ -63,7 +63,7 @@ public class UserController {
 //        return "pages/new_user";
 //    }
 
-    @GetMapping("/new")
+    @GetMapping("/users/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
         return "new_user";
@@ -75,7 +75,7 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/{id}/refactor")
+    @GetMapping("/users/{id}/refactor")
     public String refactorUsers(Model model,@PathVariable("id") int id) {
         model.addAttribute("user", userService.findUserById(id));
         return "refactor";

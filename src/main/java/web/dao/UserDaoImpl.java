@@ -24,28 +24,32 @@ public class UserDaoImpl implements UserDao {
         em = emf.createEntityManager();
     }
 
+//    @Override
+//    public List<User> showUsers() {
+//        try {
+//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+//            Root<User> root = criteriaQuery.from(User.class);
+//            criteriaQuery.select(root);
+//
+//            TypedQuery<User> query = em.createQuery(criteriaQuery);
+//            return query.getResultList();
+//        } catch (Exception e) {
+//            // Handle exceptions (e.g., logging, rollback, etc.)
+//            e.printStackTrace();
+//            return Collections.emptyList();
+//        }
+//    }
+
     @Override
     public List<User> showUsers() {
-        try {
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-            Root<User> root = criteriaQuery.from(User.class);
-            criteriaQuery.select(root);
-
-            TypedQuery<User> query = em.createQuery(criteriaQuery);
-            return query.getResultList();
-        } catch (Exception e) {
-            // Handle exceptions (e.g., logging, rollback, etc.)
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
+        return em.createQuery("from User",User.class).getResultList();
     }
 
     @Override
     public void addUser(User user) {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
-
 // Save the object to the database
         em.persist(user);
 

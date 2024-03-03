@@ -47,9 +47,25 @@
         <input type="submit" value="Delete"/>
       </form>
     </td>
+
+    <td>
+      <form th:method="GET" th:action="@{'/users/' + ${u.id} + '/refactor'}">
+        <input type="submit" value="Refactor"/>
+      </form>
+    </td>
+
   </tr>
   </tbody>
+
+
 </table>
+
+<td>
+  <form th:method="GET" th:action="@{'/users' + '/new'}">
+    <input type="submit" value="Create new user"/>
+  </form>
+</td>
+
 </body>
 </html>
 <!--<head>-->
